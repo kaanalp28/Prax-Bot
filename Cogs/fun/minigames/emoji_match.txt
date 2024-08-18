@@ -1,0 +1,158 @@
+'''
+import random
+import time
+import os
+
+error_count = 0
+correct_pairs = []
+emojis = ["😊","🤣","😁","😍","😒","😎","😢","🤑","😘","😉","😭","🤩"]
+deck = []
+
+def clearConsole():                
+  command = 'clear'                
+  if os.name in ('nt', 'dos'):     
+      command = 'cls'              
+  os.system(command)
+
+difficulty = input("Please choose your difficulty:\nExtremely Easy\nEasy\nMedium\nHard\nExtremely Hard\nImpossible\n\n").lower()
+time.sleep(1)
+clearConsole()
+
+if difficulty == "ee" or difficulty == "extremely easy":
+    grid = 3
+    mistake_amt = 5
+elif difficulty == "e" or difficulty =="easy":
+    grid = 4
+    mistake_amt = 5
+elif difficulty == "m" or difficulty == "medium":
+    grid = 4
+    mistake_amt = 4
+elif difficulty == "h" or difficulty == "hard":
+    grid = 4
+    mistake_amt = 3
+elif difficulty == "eh" or difficulty == "extremely hard":
+    grid = 5
+    mistake_amt = 4
+elif difficulty == "i" or difficulty == "impossible":
+    grid = 5
+    mistake_amt = 3
+else:
+    print("Difficulty out of ee, e, m, h, eh, i.")
+
+for _ in range(int((grid**2)/2)):
+    emoji_num = random.randint(0, (len(emojis)-1))
+    emoji = emojis[emoji_num]
+    emojis.pop(emoji_num)
+    deck.append(emoji)
+
+deck *= 2
+if grid % 2 != 0:
+    deck.append("💣")
+    print("WARNING: If you select the slot with the 💣 emoji inside, you'll instantly lose the game!")
+    time.sleep(5)
+random.shuffle(deck)
+
+
+for emoji in range(len(deck)):
+    if (emoji+1) % grid == 0:
+        end = "\n"
+    else:
+        end = ""
+
+    print(deck[emoji],end=end)
+
+time.sleep(5)
+clearConsole()
+
+for _ in range(grid):
+    print("[]"*grid)
+
+while len(correct_pairs) < (int((grid**2)/2)) and error_count <= mistake_amt:
+    while True:
+        sel1 = int(input("Select emoji number!"))-1
+        clearConsole()
+
+        if sel1 not in range(len(deck)):
+            print("Enter a number between 1-16!")
+        elif deck[sel1] == "💣":
+            print("You selected the bomb! Game over! 💣")
+            os._exit(0)
+        elif deck[sel1] in correct_pairs:
+                print("Select again nigga thats already selected")
+        else:
+            for emoji in range(len(deck)):
+                if (emoji+1) % grid == 0:
+                    end = "\n"
+                else:
+                    end = ""
+
+                if deck[emoji] in correct_pairs or emoji == sel1:
+                    print(deck[emoji],end=end)
+                else:
+                    print("[]",end=end)
+            break
+
+    while True:
+        sel2 = int(input("Select emoji number!"))-1
+        clearConsole()
+
+        if sel2 not in range(len(deck)):
+            print("Enter a number between 1-16!")
+        elif deck[sel2] == "💣":
+            print("You selected the bomb! Game over! 💣")
+            os._exit(0)
+        elif deck[sel2] in correct_pairs:
+            print("Select again nigga thats already selected")
+        else: break
+
+    if deck[sel1] == deck[sel2]:
+        correct_pairs.append(deck[sel1])
+
+        for emoji in range(len(deck)):
+            if (emoji+1) % grid == 0:
+                end = "\n"
+            else:
+                end = ""
+
+            if deck[emoji] in correct_pairs:
+                print(deck[emoji],end=end)
+            else:
+                print("[]",end=end)
+        
+        print("\nyay")
+        time.sleep(1.5)
+    else:
+        error_count += 1
+
+        for emoji in range(len(deck)):
+            if (emoji+1) % grid == 0:
+                end = "\n"
+            else:
+                end = ""
+
+            if deck[emoji] in correct_pairs or emoji == sel1 or emoji == sel2:
+                print(deck[emoji],end=end)
+            else:
+                print("[]",end=end)
+
+        print("\nwomp womp")
+        time.sleep(3)
+
+    clearConsole()
+
+    for emoji in range(len(deck)):
+        if (emoji+1) % grid == 0:
+            end = "\n"
+        else:
+            end = ""
+
+        if deck[emoji] in correct_pairs:
+            print(deck[emoji],end=end)
+        else:
+            print("[]",end=end)
+
+if error_count <= mistake_amt:
+    print("\n\nCongratulations! You won!")
+else:
+    print("\n\nSorry, you made too many mistakes... Please restart to play again!")
+'''
